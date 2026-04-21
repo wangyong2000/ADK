@@ -1,16 +1,18 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI;
-using OpenAI;
+using Azure.AI.OpenAI;
 using OpenAI.Chat;
+using System.ClientModel;
 
 class Program
 {
     static async Task Main(string[] args)
     {
-        var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? "dummy_key";
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? "https://dummy-endpoint.openai.azure.com";
+        var apiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY") ?? "dummy_key";
 
-        var chatClient = new OpenAIClient(apiKey).GetChatClient("gpt-4o-mini");
+        var chatClient = new AzureOpenAIClient(new Uri(endpoint), new ApiKeyCredential(apiKey)).GetChatClient("gpt-4o-mini");
 
         // This is the extension method in OpenAI.Chat.OpenAIChatClientExtensions
         var agent = chatClient.CreateAIAgent(
